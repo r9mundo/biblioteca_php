@@ -1,19 +1,23 @@
 <?php
 class Database {
     private $host = "localhost";
-    private $db_name = "biblioteca";
-    private $username = "root";
-    private $password = "";
-    public $conn;
+    private $usuario = "root";
+    private $senha = "";
+    private $nome_db = "Biblioteca";
+    private $conn;
 
     public function getConnection() {
         $this->conn = null;
+
         try {
-            $this->conn = new PDO("mysql:host=" . $this->host . ";dbname=" . $this->db_name, $this->username, $this->password);
-            $this->conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-        } catch (PDOException $exception) {
-            echo "Erro na conexão: " . $exception->getMessage();
+            $this->conn = new mysqli($this->host, $this->usuario, $this->senha, $this->nome_db);
+            if ($this->conn->connect_error) {
+                throw new Exception("Falha na conexão: " . $this->conn->connect_error);
+            }
+        } catch (Exception $e) {
+            echo "Erro: " . $e->getMessage();
         }
+
         return $this->conn;
     }
 }
